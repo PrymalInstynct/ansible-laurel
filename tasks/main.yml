@@ -1,0 +1,114 @@
+---
+- name: Include OS specific variables
+  include_vars: "{{ ansible_os_family }}{{ ansible_distribution_major_version }}.yml"
+
+- name: Determine latest release of laurel
+  shell: "curl -s https://github.com/threathunters-io/laurel/releases | egrep 'span.*\\.tar\\.gz' | cut -d '>' -f2 | cut -d '<' -f1 | head -n1 | cut -d '-' -f 2"
+  args:
+    warn: no
+  register: laurel_latest
+  changed_when: no
+
+- name: Setting laurel version (Part 1)
+  set_fact:
+    laurel_version: "{{ laurel_latest.stdout }}"
+  when: laurel_input == "latest"
+
+- name: Setting laurel version (Part 2)
+  set_fact:
+    laurel_version: "{{ laurel_input }}"
+  when: laurel_input != "latest"
+
+- name: Create temporary install directory
+  file:
+    path: /tmp/laurel
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create laurel system account
+  user:
+    name: _laurel
+    comment: 'Laurel Auditing'
+    home: /var/log/laurel
+    create_home: yes
+    system: yes
+    state: present
+
+- name: "Download and unarchive laurel release version {{ laurel_version }}"
+  unarchive:
+    src: 'https://github.com/threathunters-io/laurel/releases/download/{{ laurel_version }}/laurel-{{ laurel_version }}-x86_64-musl.tar.gz'
+    dest: /tmp/laurel
+    remote_src: yes
+
+- name: Copy laurel binary to /usr/local/sbin/
+  copy:
+    src: /tmp/laurel/laurel
+    dest: /usr/local/sbin/
+    remote_src: yes
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Create laural configuration directory
+  file:
+    path: /etc/laurel
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+
+- name: Install laurel configuration
+  copy:
+    src: config.toml
+    dest: /etc/laurel/
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Install audispd-plugins
+  package:
+    name: audispd-plugins
+    state: latest
+
+- name: Enable laurel via Audispd
+  copy:
+    src: laurel.conf
+    dest: "{{ audisp_plugins_dir }}"
+    mode: '0640'
+    owner: root
+    group: root
+
+- name: Copy laurel selinux policy
+  copy:
+    src: laurel.pp
+    dest: /tmp/
+    mode: '0644'
+    owner: root
+    group: root
+
+- name: Install laurel selinux policy
+  command: semodule -i /tmp/laurel.pp
+  register: selinux
+  failed_when: selinux.rc != 0
+  changed_when: no
+
+- name: Set laurel selinux context
+  command: restorecon -v -R -F /usr/local/sbin/laurel /etc/laurel /var/log/laurel
+  register: restorcon
+  failed_when: selinux.rc != 0
+  changed_when: no
+
+- name: Install custom audit.rules file
+  copy:
+    src: audit.rules
+    dest: /etc/audit/rules.d
+    mode: '0600'
+    owner: root
+    group: root
+
+- name: Restart auditd
+  command: service auditd restart
+  args:
+    warn: no

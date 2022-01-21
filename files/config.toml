@@ -1,0 +1,47 @@
+# Write log files relative to this directory
+directory = "/var/log/laurel"
+# Drop privileges from root to this user
+user = "_laurel"
+
+[auditlog]
+# Base file name for the JSONL-based log file. Set to "-" to log to stdout. In this case 
+# other log file related settings will be ignored.
+file = "laurel.log"
+# Rotate when log file reaches this size (in bytes)
+size = 1000000
+# When rotating, keep this number of generations around
+generations = 5
+# Grant read permissions on the log files to these users, using
+# POSIX ACLs
+read-users = [ "splunk" ]
+
+[transform]
+
+# "array" (the default) causes EXECVE a0, a1, a2 … arguments to be
+# output as a list of strings, "ARGV". This is the default, it allows
+# analysts to reliably reproduce what was executed.
+#
+# "string" causes arguments to be concatenated into a single string,
+# separated by space characters, "ARGV_STR". This form allows for
+# easier grepping, but it is impossible to tell if space characters in
+# the resulting string are a separator or were part of an individual
+# argument in the original command line.
+
+execve-argv = [ "array" ]
+
+# execve-argv = [ "array", "string" ]
+
+[translate]
+
+# Perform translations of numeric values that can also be done by
+# auditd if configured with log_format=ENRICHED.
+
+# arch, syscall, sockaddr structures
+universal = false
+# UID, GID values
+user-db = false
+
+[enrich]
+
+# List of environment variables to log for every EXECVE event
+execve-env = [ "LD_PRELOAD", "LD_LIBRARY_PATH" ]
