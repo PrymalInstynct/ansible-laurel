@@ -108,6 +108,22 @@
     owner: root
     group: root
 
+- name: Set Auditd Log Format
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^#?log_format\s*=\s*\w+'
+    line: log_format = ENRICHED
+
+- name: Set Auditd Name Format
+  lineinfile:
+    path: /etc/audit/auditd.conf
+    regexp: '^#?name_format\s*=\s*\w+'
+    line: name_format = fqd
+
+- name: Enable Splunk user to read Log files
+  command: setfacl -Rm u:splunk:rx /var/log/
+  changed_when: no
+
 - name: Restart auditd
   command: service auditd restart
   args:
