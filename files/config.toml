@@ -27,9 +27,9 @@ read-users = [ "splunk" ]
 # the resulting string are a separator or were part of an individual
 # argument in the original command line.
 
-execve-argv = [ "array" ]
+# execve-argv = [ "array" ]
 
-# execve-argv = [ "array", "string" ]
+execve-argv = [ "array", "string" ]
 
 [translate]
 
