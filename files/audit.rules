@@ -94,6 +94,86 @@
 -a never,exit -F arch=b32 -F path=/opt/filebeat -k filebeat
 -a never,exit -F arch=b64 -F path=/opt/filebeat -k filebeat
 
+## Splunk
+-a never,exit -F arch=b32 -F path=/opt/splunk/bin/splunk-optimize -k splunk
+-a never,exit -F arch=b64 -F path=/opt/splunk/bin/splunk-optimize -k splunk
+-a never,exit -F arch=b32 -F exe=/opt/splunk/bin/splunkd -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/opt/splunk/bin/splunkd -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/opt/splunk/bin/python3.7m -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/opt/splunk/bin/python3.7m -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/cut -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/cut -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/hostname -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/hostname -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/grep -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/grep -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/pgrep -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/pgrep -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/cat -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/cat -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/tr -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/tr -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/sed -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/sed -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/uname -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/uname -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/gawk -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/gawk -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/locale -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/locale -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/dirname -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/dirname -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/bash -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/bash -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/tee-F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/tee -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/sbin/ip -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/sbin/ip -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/sbin/ss -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/sbin/ss -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/wc -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/wc -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/sort -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/sort -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/netstat -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/netstat -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/id -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/id -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/df -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/df -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/who -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/who -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/systemctl -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/systemctl -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/date -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/date -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/last -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/last -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/lsof -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/lsof -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/rpm -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/rpm -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/env -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/env -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/usr/bin/ps -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/usr/bin/ps -F uid=splunk -k splunk
+-a never,exit -F arch=b32 -F exe=/opt/splunk/bin/openssl -F uid=splunk -k splunk
+-a never,exit -F arch=b64 -F exe=/opt/splunk/bin/openssl -F uid=splunk -k splunk
+
+## Telegraf
+-a never,exit -F arch=b32 -F exe=/usr/bin/telegraf  -k telegraf
+-a never,exit -F arch=b64 -F exe=/usr/bin/telegraf  -k telegraf
+-a never,exit -F arch=b32 -F exe=/usr/bin/systemctl -F uid=telegraf -k telegraf
+-a never,exit -F arch=b64 -F exe=/usr/bin/systemctl -F uid=telegraf -k telegraf
+
+## Chronyd
+-a never,exit -F arch=b32 -F exe=/usr/sbin/chronyd -F uid=chrony -k chrony
+-a never,exit -F arch=b64 -F exe=/usr/sbin/chronyd -F uid=chrony -k chrony
+
+## Sleep
+-a never,exit -F arch=b32 -F exe=/usr/bin/sleep -k sleep
+-a never,exit -F arch=b64 -F exe=/usr/bin/sleep -k sleep
+
 ## More information on how to filter events
 ### https://access.redhat.com/solutions/2482221
 
@@ -453,27 +533,27 @@
 -a always,exit -F arch=b32 -F euid>=1000 -S execve -k usercmd
 
 ## File Deletion Events by User
--a always,exit -F arch=b32 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=-1 -k delete
--a always,exit -F arch=b64 -S rmdir -S unlink -S unlinkat -S rename -S renameat -F auid>=1000 -F auid!=-1 -k delete
+-a always,exit -F arch=b32 -S rmdir -S unlink -S unlinkat -S rename -S renameat -S rm -F auid>=1000 -F auid!=-1 -k delete
+-a always,exit -F arch=b64 -S rmdir -S unlink -S unlinkat -S rename -S renameat -S rm -F auid>=1000 -F auid!=-1 -k delete
 
 ## File Access
 ### Unauthorized Access (unsuccessful)
--a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=-1 -k file_access
--a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=-1 -k file_access
--a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=-1 -k file_access
--a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=-1 -k file_access
+-a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=-1 -k failed_file_access
+-a always,exit -F arch=b32 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=-1 -k failed_file_access
+-a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EACCES -F auid>=1000 -F auid!=-1 -k failed_file_access
+-a always,exit -F arch=b64 -S creat -S open -S openat -S open_by_handle_at -S truncate -S ftruncate -F exit=-EPERM -F auid>=1000 -F auid!=-1 -k failed_file_access
 
 ### Unsuccessful Creation
--a always,exit -F arch=b32 -S creat,link,mknod,mkdir,symlink,mknodat,linkat,symlinkat -F exit=-EACCES -k file_creation
--a always,exit -F arch=b64 -S mkdir,creat,link,symlink,mknod,mknodat,linkat,symlinkat -F exit=-EACCES -k file_creation
--a always,exit -F arch=b32 -S link,mkdir,symlink,mkdirat -F exit=-EPERM -k file_creation
--a always,exit -F arch=b64 -S mkdir,link,symlink,mkdirat -F exit=-EPERM -k file_creation
+-a always,exit -F arch=b32 -S creat -S link -S mknod -S mkdir -S symlink -S mknodat -S linkat -S symlinkat -S touch -F exit=-EACCES -k failed_file_creation
+-a always,exit -F arch=b64 -S creat -S link -S mknod -S mkdir -S symlink -S mknodat -S linkat -S symlinkat -S touch -F exit=-EACCES -k failed_file_creation
+-a always,exit -F arch=b32 -S link -S mkdir -S symlink -S mkdirat -F exit=-EPERM -k file_creation
+-a always,exit -F arch=b64 -S link -S mkdir -S symlink -S mkdirat -F exit=-EPERM -k file_creation
 
 ### Unsuccessful Modification
--a always,exit -F arch=b32 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EACCES -k file_modification
--a always,exit -F arch=b64 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EACCES -k file_modification
--a always,exit -F arch=b32 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EPERM -k file_modification
--a always,exit -F arch=b64 -S rename -S renameat -S truncate -S chmod -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EPERM -k file_modification
+-a always,exit -F arch=b32 -S rename -S renameat -S truncate -S chmod -S chown -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EACCES -k failed_file_modification
+-a always,exit -F arch=b64 -S rename -S renameat -S truncate -S chmod -S chown -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EACCES -k failed_file_modification
+-a always,exit -F arch=b32 -S rename -S renameat -S truncate -S chmod -S chown -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EPERM -k failed_file_modification
+-a always,exit -F arch=b64 -S rename -S renameat -S truncate -S chmod -S chown -S setxattr -S lsetxattr -S removexattr -S lremovexattr -F exit=-EPERM -k failed_file_modification
 
 ## 32bit API Exploitation
 ### If you are on a 64 bit platform, everything _should_ be running
