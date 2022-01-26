@@ -529,8 +529,8 @@
 -a always,exit -F arch=b32 -F euid=0 -S execve -k rootcmd
 
 ## User command executions
--a always,exit -F arch=b64 -F euid>=1000 -S execve -k usercmd
--a always,exit -F arch=b32 -F euid>=1000 -S execve -k usercmd
+-a always,exit -F arch=b64 -F auid>=1000 auid!=unset -S execve -k usercmd
+-a always,exit -F arch=b32 -F auid>=1000 auid!=unset -S execve -k usercmd
 
 ## File Deletion Events by User
 -a always,exit -F arch=b32 -S rmdir -S unlink -S unlinkat -S rename -S renameat -S rm -F auid>=1000 -F auid!=-1 -k delete
