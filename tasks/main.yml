@@ -1,26 +1,18 @@
 ---
 - name: Include OS specific variables
-  include_vars: "{{ ansible_os_family }}{{ ansible_distribution_major_version }}.yml"
+  ansible.builtin.include_vars: "{{ ansible_os_family }}{{ ansible_distribution_major_version }}.yml"
 
 - name: Determine latest release of laurel
-  shell: "curl -s https://github.com/threathunters-io/laurel/releases | egrep 'span.*\\.tar\\.gz' | cut -d '>' -f2 | cut -d '<' -f1 | head -n1 | cut -d '-' -f 2"
-  args:
-    warn: no
+  ansible.builtin.shell: "curl -s https://github.com/threathunters-io/laurel/releases | grep -Po 'Release\\sv[^<]+' | cut -d ' ' -f2 | uniq | head -1"
   register: laurel_latest
   changed_when: no
 
-- name: Setting laurel version (Part 1)
-  set_fact:
+- name: Setting laurel version
+  ansible.builtin.set_fact:
     laurel_version: "{{ laurel_latest.stdout }}"
-  when: laurel_input == "latest"
-
-- name: Setting laurel version (Part 2)
-  set_fact:
-    laurel_version: "{{ laurel_input }}"
-  when: laurel_input != "latest"
 
 - name: Create temporary install directory
-  file:
+  ansible.builtin.file:
     path: /tmp/laurel
     state: directory
     mode: '0755'
@@ -28,7 +20,7 @@
     group: root
 
 - name: Create laurel system account
-  user:
+  ansible.builtin.user:
     name: _laurel
     comment: 'Laurel Auditing'
     home: /var/log/laurel
@@ -37,22 +29,23 @@
     state: present
 
 - name: "Download and unarchive laurel release version {{ laurel_version }}"
-  unarchive:
+  ansible.builtin.unarchive:
     src: 'https://github.com/threathunters-io/laurel/releases/download/{{ laurel_version }}/laurel-{{ laurel_version }}-x86_64-musl.tar.gz'
     dest: /tmp/laurel
     remote_src: yes
 
 - name: Copy laurel binary to /usr/local/sbin/
-  copy:
+  ansible.builtin.copy:
     src: /tmp/laurel/laurel
     dest: /usr/local/sbin/
     remote_src: yes
     mode: '0755'
     owner: root
     group: root
+  register: laurel_installed
 
 - name: Create laural configuration directory
-  file:
+  ansible.builtin.file:
     path: /etc/laurel
     state: directory
     mode: '0755'
@@ -60,7 +53,7 @@
     group: root
 
 - name: Install laurel configuration
-  copy:
+  ansible.builtin.copy:
     src: config.toml
     dest: /etc/laurel/
     mode: '0644'
@@ -68,63 +61,41 @@
     group: root
 
 - name: Install audispd-plugins
-  package:
+  ansible.builtin.package:
     name: audispd-plugins
-    state: latest
+    state: present
 
 - name: Enable laurel via Audispd
-  copy:
+  ansible.builtin.copy:
     src: laurel.conf
     dest: "{{ audisp_plugins_dir }}"
     mode: '0640'
     owner: root
     group: root
 
-- name: Copy laurel selinux policy
-  copy:
-    src: laurel.pp
-    dest: /tmp/
-    mode: '0644'
-    owner: root
-    group: root
+- name: SELinux Configuartion
+  block:
+  - name: Copy laurel selinux policy
+    ansible.builtin.copy:
+      src: laurel.pp
+      dest: /tmp/
+      mode: '0644'
+      owner: root
+      group: root
 
-- name: Install laurel selinux policy
-  command: semodule -i /tmp/laurel.pp
-  register: selinux
-  failed_when: selinux.rc != 0
-  changed_when: no
+  - name: Install laurel selinux policy
+    ansible.builtin.command: semodule -i /tmp/laurel.pp
+    register: selinux
+    failed_when: selinux.rc != 0
+    changed_when: no
 
-- name: Set laurel selinux context
-  command: restorecon -v -R -F /usr/local/sbin/laurel /etc/laurel /var/log/laurel
-  register: restorcon
-  failed_when: selinux.rc != 0
-  changed_when: no
+  - name: Set laurel selinux context
+    ansible.builtin.command: restorecon -v -R -F /usr/local/sbin/laurel /etc/laurel /var/log/laurel
+    register: restorcon
+    failed_when: restorcon.rc != 0
+    changed_when: no
+  when: selinux_enabled | bool
 
-- name: Install custom audit.rules file
-  copy:
-    src: audit.rules
-    dest: /etc/audit/rules.d
-    mode: '0600'
-    owner: root
-    group: root
-
-- name: Set Auditd Log Format
-  lineinfile:
-    path: /etc/audit/auditd.conf
-    regexp: '^#?log_format\s*=\s*\w+'
-    line: log_format = ENRICHED
-
-- name: Set Auditd Name Format
-  lineinfile:
-    path: /etc/audit/auditd.conf
-    regexp: '^#?name_format\s*=\s*\w+'
-    line: name_format = fqd
-
-- name: Enable Splunk user to read Log files
-  command: setfacl -Rm u:splunk:rx /var/log/
-  changed_when: no
-
-- name: Restart auditd
-  command: service auditd restart
-  args:
-    warn: no
+- name: Reboot Host
+  ansible.builtin.reboot:
+  when: laurel_installed is changed

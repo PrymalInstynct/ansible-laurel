@@ -1,3 +1,3 @@
 ---
 audisp_plugins_dir: /etc/audit/plugins.d/
-selinux_enabled: true
+selinux_enabled: false
