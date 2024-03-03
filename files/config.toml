@@ -19,12 +19,12 @@ input = "stdin"
 # other log file related settings will be ignored.
 file = "audit.log"
 # Rotate when log file reaches this size (in bytes)
-size = "100000000"
+size = 100000000
 # When rotating, keep this number of generations around
 generations = 5
 # Grant read permissions on the log files to these users, using
 # POSIX ACLs
-read-users = [ "splunk" ]
+read-users = [ "splunk","splunkfwd" ]
 
 # Add a prefix to every output line. The CEE cookie can be used to
 # instruct consumers to parse the JSON document, cf.
