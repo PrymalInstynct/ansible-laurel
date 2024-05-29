@@ -33,13 +33,13 @@ Example Playbook
   hosts: agents
   become: true
   roles:
-    - ansible-laurel
+    - PrymalInstynct.ansible_laurel
 ```
 
 License
 -------
 
-MIT
+GPLv3
 
 Author Information
 ------------------
