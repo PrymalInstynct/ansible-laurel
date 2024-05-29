@@ -2,4 +2,4 @@
 - hosts: localhost
   remote_user: root
   roles:
-    - laurel
+    - PrymalInstynct.ansible_laurel
