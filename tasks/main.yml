@@ -5,18 +5,22 @@
 - name: Install Dependencies
   ansible.builtin.package:
     name:
-      - auditd
       - audispd-plugins
+      - curl
+      - jq
+      - ca-certificates
     state: present
 
-- name: Determine latest release of laurel
-  ansible.builtin.shell: "curl -s https://github.com/threathunters-io/laurel/releases | grep -Po 'Release\\sv[^<]+' | cut -d ' ' -f2 | uniq | head -1"
-  register: laurel_latest
-  changed_when: no
+- name: Identify Laurel Latest Version # noqa: command-instead-of-module
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
 
-- name: Setting laurel version
-  ansible.builtin.set_fact:
-    laurel_version: "{{ laurel_latest.stdout }}"
+      curl --silent "https://api.github.com/repos/threathunters-io/laurel/releases/latest" | jq -r '.assets[].browser_download_url' | grep -E "{{ laurel_architecture }}-glibc.tar.gz$" | head -1
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: laurel_latest
 
 - name: Create temporary install directory
   ansible.builtin.file:
@@ -35,9 +39,9 @@
     system: yes
     state: present
 
-- name: "Download and unarchive laurel release version {{ laurel_version }}"
+- name: "Download and unarchive Laurel"
   ansible.builtin.unarchive:
-    src: 'https://github.com/threathunters-io/laurel/releases/download/{{ laurel_version }}/laurel-{{ laurel_version }}-x86_64-musl.tar.gz'
+    src: '{{ laurel_latest.stdout }}'
     dest: /tmp/laurel
     remote_src: yes
 
@@ -51,7 +55,7 @@
     group: root
   register: laurel_installed
 
-- name: Create laural configuration directory
+- name: Create laurel configuration directory
   ansible.builtin.file:
     path: /etc/laurel
     state: directory
@@ -75,7 +79,7 @@
     owner: root
     group: root
 
-- name: SELinux Configuartion
+- name: SELinux Configuration
   block:
   - name: Copy laurel selinux policy
     ansible.builtin.copy:
