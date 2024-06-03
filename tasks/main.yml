@@ -102,6 +102,37 @@
     changed_when: no
   when: selinux_enabled | bool
 
-- name: Reboot Host
-  ansible.builtin.reboot:
-  when: laurel_installed is changed
+- name: Restart Auditd service
+  ansible.builtin.systemd:
+    name: auditd
+    state: restarted
+  when: ansible_os_family == 'Debian'
+
+- name: Restart Auditd service
+  ansible.builtin.service:
+    name: auditd
+    state: restarted
+    use: service
+  when: ansible_os_family == 'RedHat'
+
+- name: Ensure Auditd read the applied rules
+  ansible.builtin.shell: "auditctl -R /etc/audit/rules.d/audit.rules"
+  when: test is not defined
+
+- name: Ensure Auditd load the rules
+  ansible.builtin.shell: augenrules --load
+  when: test is not defined
+
+- name: Verify if the rules are being properly loaded
+  ansible.builtin.shell: auditctl -l
+  register: audit_rules
+  failed_when: "'No rules' in audit_rules.stdout"
+  when: test is not defined
+
+- name: Tell auditd to re-evaluate its configuration
+  ansible.builtin.shell: pkill -HUP auditd
+
+- name: Verify Laurel is running
+  ansible.builtin.shell: ps aux | grep laurel
+  register: laurel_run
+  failed_when: "'/usr/local/sbin/laurel' not in laurel_run.stdout"
