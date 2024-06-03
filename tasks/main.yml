@@ -2,6 +2,13 @@
 - name: Include OS specific variables
   ansible.builtin.include_vars: "{{ ansible_os_family }}{{ ansible_distribution_major_version }}.yml"
 
+- name: Install Dependencies
+  ansible.builtin.package:
+    name:
+      - auditd
+      - audispd-plugins
+    state: present
+
 - name: Determine latest release of laurel
   ansible.builtin.shell: "curl -s https://github.com/threathunters-io/laurel/releases | grep -Po 'Release\\sv[^<]+' | cut -d ' ' -f2 | uniq | head -1"
   register: laurel_latest
@@ -59,11 +66,6 @@
     mode: '0644'
     owner: root
     group: root
-
-- name: Install audispd-plugins
-  ansible.builtin.package:
-    name: audispd-plugins
-    state: present
 
 - name: Enable laurel via Audispd
   ansible.builtin.copy:
